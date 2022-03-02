@@ -3,13 +3,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char *archivos[10]={"archivo1.txt","archivo2.txt","archivo3.txt","archivo4.txt","archivo5.txt","archivo6.txt","archivo7.txt","archivo8.txt","archivo9.txt","archivo10.txt"};//
+char *archivos[10]={"archivo1.txt","archivo2.txt","archivo3.txt","archivo4.txt","archivo5.txt","archivo6.txt","archivo7.txt","archivo8.txt","archivo9.txt","archivo10.txt"};//archivos qque vamos a registrar
+char *palabra[10] = {"río", "no", "ya", "soy", "cielo", "fuego", "corazón", "tiempo", "olvido", "ni"}; 
 void* funcion(void* param);
 
 
 typedef struct {
     char caracter[30];
-    float numero_f;
+    double Porcentaje;
     int contT;// contador total
     int contA[10];// contador por archivo
     int indice;
@@ -18,11 +19,11 @@ typedef struct {
 
 int main(int argc, char const *argv[]){
 
-    /**** Se corroboran el numero de argumentos recibidos ****/
+    /**** Se corroboran el numero de argumentos recibidos 
     if( argc < 2){
         printf("Favor de ingresar las palabras a buscar\n");
         exit(1);
-    }
+    }*/
 
     /**** Paso 1: Creacion de los hilos ****/
 
@@ -34,7 +35,7 @@ int main(int argc, char const *argv[]){
 
 
     for(int i = 0; i != n ; i++){
-        strcpy(hilo_D[i-1].caracter, argv[i]);
+        strcpy(hilo_D[i-1].caracter, palabra[i]);
         hilo_D[i-1].contT = i;
         hilo_D[i-1].indice = i+1;
         if (pthread_create(&id[i], NULL, (void*) funcion, &hilo_D[i]) == -1){ // Esta funcion nos regresa 1 si se creo y -1 en caso contrario
@@ -49,8 +50,8 @@ int main(int argc, char const *argv[]){
         pthread_join(id[j], &variable);
         printf("La palabrar %s se encontro %d veces\n",((hilo_p *) variable)->caracter, ((hilo_p *) variable)->contT);
         for(int k=0;k<10;k++){
-            p =(((hilo_p*)variable)->contT/((hilo_p*)variable)->contA[j])*100;
-            printf("Porcentaje de \"%s\" en el archivo %d = %.2f\n",((hilo_p *) variable)->caracter,k+1,p);
+            ((hilo_p*)variable)->Porcentaje =(((hilo_p*)variable)->contT/((hilo_p*)variable)->contA[j]);
+            printf("Porcentaje de \"%s\" en el archivo %d = %f%\n",((hilo_p *) variable)->caracter,k+1,((hilo_p*)variable)->Porcentaje*100);
         }
         printf("\n");
     }
