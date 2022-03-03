@@ -53,7 +53,7 @@ int main(int argc, char const *argv[]){
         printf("La palabrar \"%s\" se encontro %d veces en los 10 archivos\n",((hilo_p *) variable)->caracter, ((hilo_p *) variable)->contIT);
         for(int k=0;k!=10;k++){
             printf("Veces que aparece \"%s\" en el archivo %d = %d\n",((hilo_p *) variable)->caracter,k+1,((hilo_p*)variable)->contIA[k]);
-            //((hilo_p*)variable)->Porcentaje =(((hilo_p*)variable)->contIT/((hilo_p*)variable)->contTA[j]);
+            printf("porcentaje de aparicion\"%s\" en el archivo %d = %f\n",((hilo_p *) variable)->caracter,k+1,((hilo_p*)variable)->porcA[k]);
             printf("Palabras totales \"%s\" en el archivo %d = %d\n",((hilo_p *) variable)->caracter,k+1,((hilo_p*)variable)->contTA[k]);
         }
         printf("\n");
