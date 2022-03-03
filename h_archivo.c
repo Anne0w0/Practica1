@@ -12,10 +12,7 @@ typedef struct {
     char caracter[30];
     double porcA[10];//porcentaje por archivo
     int contIT;// contador insidencias totales
-    int contTA[10];// contador palabras totales por archivo
     int contIA[10];//incidencias por archivo
-    int indice;
-    int id;
 } hilo_p;
 
 int main(int argc, char const *argv[]){
@@ -29,7 +26,7 @@ int main(int argc, char const *argv[]){
     /**** Paso 1: Creacion de los hilos ****/
 
     //mem_global = "archivo.txt";
-    int n = 10 ; // n sera el numero de hilos (empezando por 0)
+    int n = 5 ; // n sera el numero de hilos (empezando por 0)
     void *variable; // variable para recibir datos del hilo
     pthread_t *id = (pthread_t *)malloc(sizeof(pthread_t)*n); // id's de los hilos;
     hilo_p * hilo_D = (hilo_p*) malloc(sizeof(hilo_p)*n); // estructuras que se le pasara a cada uno de los hijos
@@ -38,7 +35,7 @@ int main(int argc, char const *argv[]){
     for(int i = 0; i != n ; i++){
         strcpy(hilo_D[i].caracter, palabra[i]);
             hilo_D[i].contIT = i;
-            hilo_D[i].indice = i+1;
+            //hilo_D[i].indice = i+1;
             if (pthread_create(&id[i], NULL, (void*) funcion, &hilo_D[i]) == -1){ // Esta funcion nos regresa 1 si se creo y -1 en caso contrario
                 printf("Error al crear el hilo\n");
                 exit(1);
@@ -54,7 +51,6 @@ int main(int argc, char const *argv[]){
         for(int k=0;k!=10;k++){
             printf("Veces que aparece \"%s\" en el archivo %d = %d\n",((hilo_p *) variable)->caracter,k+1,((hilo_p*)variable)->contIA[k]);
             printf("porcentaje de aparicion\"%s\" en el archivo %d = %f\n",((hilo_p *) variable)->caracter,k+1,((hilo_p*)variable)->porcA[k]);
-            printf("Palabras totales \"%s\" en el archivo %d = %d\n",((hilo_p *) variable)->caracter,k+1,((hilo_p*)variable)->contTA[k]);
         }
         printf("\n");
     }
@@ -68,12 +64,10 @@ int main(int argc, char const *argv[]){
 void* funcion(void* param){
 
     int contIT=0;//contador de insidencias totales(10 archivos)
-    int contTA=0;//contador de palabras totales por archivo
     int contIA=0;//contador de insidencias por archivo
 
     /**** Paso 3: Crear la funcion que se convertira en el hilo ****/
     hilo_p *h = (hilo_p *) param;
-    printf("Palabra del hilo: \"%s\" \n", h->caracter);
 
     for(int k=0; k != 10; k++){ 
         /* APERTURA DEL ARCHIVO */
@@ -82,11 +76,11 @@ void* funcion(void* param){
             printf("Error al abrir el archivo");
             exit(1);
         }
-         contTA = 0;
          contIA = 0;
         /* Algoritmo para contar numero de coicidencias de la palabra indicada */
-        char texto[100];
+        char texto[1000];
         int tmp1, tmp2, cont = 0;
+
         while (feof(archivo_hijo) == 0){
             fgets(texto, 1000, archivo_hijo);
             for (int i = 0; i < strlen(texto); i++) {
@@ -101,18 +95,19 @@ void* funcion(void* param){
                     }
                 }
             }
-            contTA = strlen(texto);
             contIA =  cont;
         }
         fclose(archivo_hijo);
         contIT=contIT+cont;
-        h->contTA[k]=contTA;
         h->contIA[k]=contIA;
-        h->porcA[k]= (contIA/contTA);
     }
+
+    h->contIT = contIT; //VALOR FINAL
+
+    for(int i=0;i<10;i++)
+        h->porcA[i]= ((h->contIA[i]*100)/contIT);
     
-    h->contIT = contIT;
-     pthread_exit((void*) &h[0]);
+    pthread_exit((void*) &h[0]);
 }
 
 
