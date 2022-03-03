@@ -17,15 +17,8 @@ typedef struct {
 
 int main(int argc, char const *argv[]){
 
-    /**** Se corroboran el numero de argumentos recibidos 
-    if( argc < 2){
-        printf("Favor de ingresar las palabras a buscar\n");
-        exit(1);
-    }*/
-
     /**** Paso 1: Creacion de los hilos ****/
 
-    //mem_global = "archivo.txt";
     int n = 5 ; // n sera el numero de hilos (empezando por 0)
     void *variable; // variable para recibir datos del hilo
     pthread_t *id = (pthread_t *)malloc(sizeof(pthread_t)*n); // id's de los hilos;
@@ -50,7 +43,7 @@ int main(int argc, char const *argv[]){
         printf("La palabrar \"%s\" se encontro %d veces en los 10 archivos\n",((hilo_p *) variable)->caracter, ((hilo_p *) variable)->contIT);
         for(int k=0;k!=10;k++){
             printf("Veces que aparece \"%s\" en el archivo %d = %d\n",((hilo_p *) variable)->caracter,k+1,((hilo_p*)variable)->contIA[k]);
-            printf("porcentaje de aparicion\"%s\" en el archivo %d = %f\n",((hilo_p *) variable)->caracter,k+1,((hilo_p*)variable)->porcA[k]);
+            printf("Porcentaje de aparicion= %f\n",((hilo_p *) variable)->caracter,k+1,((hilo_p*)variable)->porcA[k]);
         }
         printf("\n");
     }
@@ -104,7 +97,7 @@ void* funcion(void* param){
 
     h->contIT = contIT; //VALOR FINAL
 
-    for(int i=0;i<10;i++)
+    for(int i=0;i<10;i++)//calculo del porcentaje por archivo
         h->porcA[i]= ((h->contIA[i]*100)/contIT);
     
     pthread_exit((void*) &h[0]);
